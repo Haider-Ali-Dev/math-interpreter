@@ -1,0 +1,7 @@
+{
+  "BinaryExpr": {
+    "left": { "LiteralExpr": { "value": { "Number": 1 } } },
+    "op": { "line": 1, "tty": "Plus", "value": null },
+    "right": { "LiteralExpr": { "value": { "String": "pi" } } }
+  }
+}
