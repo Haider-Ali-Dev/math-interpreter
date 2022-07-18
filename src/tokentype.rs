@@ -10,13 +10,17 @@ pub enum TokenType {
     Number,
     Var,
     RightParen,
-    LeftParen
+    LeftParen,
+    Modulo,
+    True,
+    False
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 
 pub enum Type {
     Number(isize),
     String(String),
+    Boolean(bool)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq,Deserialize, Serialize)]

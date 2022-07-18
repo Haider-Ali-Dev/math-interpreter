@@ -4,6 +4,7 @@ pub struct Lexer {
     pub code: String,
     line: usize,
     current: usize,
+    start: usize,
     broken_code: Vec<char>,
     tokens: Vec<Token>,
 }
@@ -14,6 +15,7 @@ impl Lexer {
             code: code.to_string(),
             line: 1,
             current: 0,
+            start: 0,
             broken_code: code.chars().collect::<Vec<_>>(),
             tokens: vec![],
         }
@@ -21,8 +23,15 @@ impl Lexer {
     pub fn lex(&mut self) -> Vec<Token> {
         // let mut tokens = vec![];
         while !self.is_at_end() {
+            self.start = self.current;
+
             let c = self.current_char().unwrap();
             match c {
+                '%' => self.tokens.push(Token {
+                    tty: TokenType::Modulo,
+                    value: None,
+                    line: self.line,
+                }),
                 '+' => self.tokens.push(Token {
                     tty: TokenType::Plus,
                     value: None,
@@ -53,7 +62,13 @@ impl Lexer {
                     value: None,
                     line: self.line,
                 }),
+                '\n' => self.line += 1,
                 a => {
+                    // let mut holder = String::new();
+                    // while self.peek_next(1).unwrap().is_digit(10) {
+                    //     let a = self.next().unwrap();
+                    //     holder.push(a.clone());
+                    // }
                     if a.is_ascii_digit() {
                         let val = a.to_digit(10).unwrap();
                         self.tokens.push(Token {
@@ -75,7 +90,6 @@ impl Lexer {
                         if v_as_string.as_str() == "var" {
                             let mut value = String::new();
                             while self.next() != Some(&')') {
-                                println!("{}", self.current_char().unwrap());
                                 if self.current_char() == Some(&'(') {
                                     continue;
                                 }
@@ -112,6 +126,4 @@ impl Lexer {
     pub fn current_char(&self) -> Option<&char> {
         self.broken_code.get(self.current)
     }
-
-    
 }

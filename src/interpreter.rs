@@ -9,6 +9,9 @@ impl Interpreter {
         match e {
             Expr::BinaryExpr { right, op, left } => match op.tty {
                 TokenType::Divide => {
+                    if Interpreter::interpret(right)? == 0.0 {
+                        return Err("Cannot divide with 0".to_string())
+                    }
                     Ok(Interpreter::interpret(left)? / Interpreter::interpret(right)?)
                 }
                 TokenType::Minus => {
@@ -19,6 +22,9 @@ impl Interpreter {
                 }
                 TokenType::Star => {
                     Ok(Interpreter::interpret(left)? * Interpreter::interpret(right)?)
+                },
+                TokenType::Modulo => {
+                    Ok(Interpreter::interpret(left)? % Interpreter::interpret(right)?)
                 }
                 _ => Err("Unknown Operation".to_owned()),
             },
@@ -28,6 +34,12 @@ impl Interpreter {
                     "pi" => Ok(3.141592653589793238),
                     _ => Err("Wrong math variable".to_string()),
                 },
+                Type::Boolean(a) => {
+                    match a {
+                        true => Ok(1.0),
+                        false => Ok(0.0)
+                    }
+                }
             },
             Expr::UnaryExpr { op, right } => match op.tty {
                 TokenType::Minus => Ok(-Interpreter::interpret(&right)?),

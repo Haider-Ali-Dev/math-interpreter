@@ -27,12 +27,11 @@ impl Parser {
         Self { current: 0, lex }
     }
     pub fn parse(&mut self) -> Expr {
-        println!("{:#?}", self.current_token());
+        
         self.expression()
     }
 
     pub fn expression(&mut self) -> Expr {
-        println!("CALLED: expression func");
         self.term()
     }
 
@@ -52,7 +51,7 @@ impl Parser {
 
     pub fn factor(&mut self) ->  Expr {
         let mut expr = self.unary();
-        while self.match_next(vec![TokenType::Star, TokenType::Divide]) {
+        while self.match_next(vec![TokenType::Star, TokenType::Divide, TokenType::Modulo]) {
             let op = self.get_previous();
             let right = self.unary();
             expr = Expr::BinaryExpr { right: Box::new(right), op: op, left: Box::new(expr) }
@@ -84,7 +83,6 @@ impl Parser {
             return false;
         }
         for token in v {
-            println!("{:?} == {:?}", token, self.current_token_type());
             if token == self.current_token_type() {
                 self.next();
                 return true;
